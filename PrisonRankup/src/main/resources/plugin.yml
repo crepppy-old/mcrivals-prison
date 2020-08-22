@@ -1,0 +1,10 @@
+main: com.mcrivals.prisoncore.PrisonRankup
+name: MCRivalsPrisonRankup
+authors: [crepppy]
+depends: [MCRivalsPrisonCore]
+version: 1.0
+
+commands:
+  rankup:
+    description: Ranks the player up to the next mine
+    usage: /<command>

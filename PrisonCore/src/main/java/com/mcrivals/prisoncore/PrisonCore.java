@@ -21,4 +21,8 @@ public class PrisonCore extends JavaPlugin {
 	public void sendPrefixedMessage(String message, Player player) {
 		player.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + message));
 	}
+
+	public void sendPrefixedMessage(String message, Player player, String... format) {
+		player.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + String.format(message, format)));
+	}
 }

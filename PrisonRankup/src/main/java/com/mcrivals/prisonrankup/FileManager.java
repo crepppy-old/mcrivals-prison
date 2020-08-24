@@ -1,6 +1,7 @@
 package com.mcrivals.prisonrankup;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -77,6 +78,34 @@ public class FileManager {
 			mineConfig.save(file);
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	public void loadTutorials() {
+		File file = new File(plugin.getDataFolder(), "tutorials.yml");
+		if (file.exists()) {
+			FileConfiguration tutorialsConfig = YamlConfiguration.loadConfiguration(file);
+			for (String tutorial : tutorialsConfig.getConfigurationSection("tutorials").getKeys(false)) {
+				ConfigurationSection section = tutorialsConfig.getConfigurationSection("tutorials." + tutorial);
+				Location location = null;
+				if (section.contains("location")) {
+					String[] locationSplit = section.getString("location").split(" ");
+					location = new Location(
+							Bukkit.getWorld(locationSplit[0]),
+							Integer.parseInt(locationSplit[1]),
+							Integer.parseInt(locationSplit[2]),
+							Integer.parseInt(locationSplit[3]));
+				}
+				plugin.getTutorials().add(new Tutorial(
+						tutorial,
+						location,
+						section.getStringList("messages")
+								.stream()
+								.map(x -> ChatColor.translateAlternateColorCodes('&', x))
+								.collect(Collectors.toList()),
+						section.getInt("delay"),
+						section.getString("placeholder")));
+			}
 		}
 	}
 }

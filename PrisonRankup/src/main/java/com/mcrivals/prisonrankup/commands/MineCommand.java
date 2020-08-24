@@ -20,7 +20,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MineCommand implements CommandExecutor {
@@ -43,13 +42,13 @@ public class MineCommand implements CommandExecutor {
 			sender.sendMessage(Messages.NOT_PLAYER);
 			return true;
 		}
+		Player player = (Player) sender;
 		if (!sender.hasPermission("prisonrankup.mineadmin")) {
-			sender.sendMessage(Messages.NO_PERMISSION);
+			msg(Messages.NO_PERMISSION, player);
 			return true;
 		}
-		Player player = (Player) sender;
 		if (args.length == 0) {
-			msg(Messages.NOT_ENOUGH_ARGS, player, "/mine <create|delete|addblock|removeblock|rankup|list>");
+			player.sendMessage(helpCommand());
 			return true;
 		}
 		String subcommand = args[0];
@@ -57,7 +56,7 @@ public class MineCommand implements CommandExecutor {
 		if (args.length == 0) {
 			if (subcommand.equalsIgnoreCase("list")) {
 				msg("Currently available mines: ", player);
-				for(Mine m : plugin.getMines()) {
+				for (Mine m : plugin.getMines()) {
 					player.sendMessage(ChatColor.GRAY + "  - " + m.getName());
 				}
 			} else if (subcommand.equalsIgnoreCase("create")) {
@@ -70,8 +69,12 @@ public class MineCommand implements CommandExecutor {
 				msg(Messages.NOT_ENOUGH_ARGS, player, "/mine removeblock <block> <mine>");
 			} else if (subcommand.equalsIgnoreCase("rankup")) {
 				msg(Messages.NOT_ENOUGH_ARGS, player, "/mine rankup <mine> <rankup mine>");
+			} else if (subcommand.equalsIgnoreCase("addcommand")) {
+				msg(Messages.NOT_ENOUGH_ARGS, player, "/mine addcommand <mine> <command>");
+			} else if (subcommand.equalsIgnoreCase("removecommand")) {
+				msg(Messages.NOT_ENOUGH_ARGS, player, "/mine removecommand <mine> <command>");
 			} else {
-				msg(Messages.NOT_ENOUGH_ARGS, player, "/mine <create|delete|addblock|removeblock|rankup>");
+				player.sendMessage(helpCommand());
 			}
 		} else {
 			if (subcommand.equalsIgnoreCase("create")) {
@@ -149,14 +152,13 @@ public class MineCommand implements CommandExecutor {
 				if (args.length < 2) {
 					msg(Messages.NOT_ENOUGH_ARGS, player, "/mine removeblock <block> <mine>");
 				} else {
-					Matcher match = rankupPattern.matcher(String.join(" ", args));
-					Optional<Mine> startMine = plugin.getMineByName(match.group(1));
-					Optional<Mine> rankupMine = plugin.getMineByName(match.group(2));
+					Optional<Mine> startMine = plugin.getMineByName(args[0]);
+					Optional<Mine> rankupMine = plugin.getMineByName(args[1]);
 
 					if (!startMine.isPresent())
-						msg(ChatColor.RED + "Couldn't find a mine with the name '%s'", player, match.group(1));
+						msg(ChatColor.RED + "Couldn't find a mine with the name '%s'", player, args[0]);
 					else if (!rankupMine.isPresent())
-						msg(ChatColor.RED + "Couldn't find a mine with the name '%s'", player, match.group(2));
+						msg(ChatColor.RED + "Couldn't find a mine with the name '%s'", player, args[1]);
 					else {
 						int indexOfRankup = plugin.getMines().indexOf(rankupMine.get());
 						plugin.getMines().remove(startMine.get());
@@ -164,8 +166,38 @@ public class MineCommand implements CommandExecutor {
 						msg("Rankup order changed!", player);
 					}
 				}
+			} else if (subcommand.equalsIgnoreCase("addcommand")) {
+				if (args.length < 2) {
+					msg(Messages.NOT_ENOUGH_ARGS, player, "/mine addcommand <mine> <command>");
+				} else {
+					Optional<Mine> mine = plugin.getMineByName(args[0]);
+					if (!mine.isPresent())
+						msg(ChatColor.RED + "Couldn't find a mine with the name '%s'", player, args[0]);
+					else {
+						mine.get().addCommand(String.join(" ", Arrays.copyOfRange(args, 1, args.length)));
+					}
+				}
+			} else if (subcommand.equalsIgnoreCase("removecommand")) {
+				if (args.length < 2) {
+					msg(Messages.NOT_ENOUGH_ARGS, player, "/mine removecommand <mine> <command>");
+				} else {
+					Optional<Mine> mine = plugin.getMineByName(args[0]);
+					if (!mine.isPresent())
+						msg(ChatColor.RED + "Couldn't find a mine with the name '%s'", player, args[0]);
+					else {
+						String targetCommand = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+						for (String mineCommand : mine.get().getCommands()) {
+							if (mineCommand.toLowerCase().startsWith(targetCommand.toLowerCase())) {
+								mine.get().getCommands().remove(mineCommand);
+								msg("Command '/%s' has been removed", player, mineCommand);
+								return true;
+							}
+						}
+						msg(ChatColor.RED + "This mine has no command like '/%s'", player, targetCommand);
+					}
+				}
 			} else {
-				msg(Messages.NOT_ENOUGH_ARGS, player, "/mine <create|delete|addblock|removeblock|rankup>");
+				player.sendMessage(helpCommand());
 			}
 		}
 
@@ -185,11 +217,13 @@ public class MineCommand implements CommandExecutor {
 
 	private String helpCommand() {
 		return plugin.getPrisonCore().getPrefix() + "List of commands:\n" +
-		ChatColor.DARK_RED + "/mine create <name> <gold>" + ChatColor.GRAY + " - Creates a new mine with your worldguard selection\n" +
-		ChatColor.DARK_RED + "/mine delete <name>" + ChatColor.GRAY + " - Deletes the mine specified\n" +
-		ChatColor.DARK_RED + "/mine addblock <block> <percentage> <name>" + ChatColor.GRAY + " - Add a block to the mine\n" +
-		ChatColor.DARK_RED + "/mine removeblock <block> <mine>" + ChatColor.GRAY + " - Remove a block from the mine\n" +
-		ChatColor.DARK_RED + "/mine rankup <mine> <rankup mine>" + ChatColor.GRAY + " - Changes the rankup order of the mines\n";
-		//todo
+				ChatColor.DARK_RED + "/mine create <name> <gold>" + ChatColor.GRAY + " - Creates a new mine with your worldguard selection\n" +
+				ChatColor.DARK_RED + "/mine delete <name>" + ChatColor.GRAY + " - Deletes the mine specified\n" +
+				ChatColor.DARK_RED + "/mine addblock <block> <percentage> <name>" + ChatColor.GRAY + " - Add a block to the mine\n" +
+				ChatColor.DARK_RED + "/mine removeblock <block> <mine>" + ChatColor.GRAY + " - Remove a block from the mine\n" +
+				ChatColor.DARK_RED + "/mine addcommand <mine> <command>" + ChatColor.GRAY + " - Add a command to be run when a player ranks up to the mine\n" +
+				ChatColor.DARK_RED + "/mine removecommand <mine> <command>" + ChatColor.GRAY + " - Remove a command that's run when a player ranks up\n" +
+				ChatColor.DARK_RED + "/mine rankup <mine> <rankup mine>" + ChatColor.GRAY + " - Changes the rankup order of the mines\n" +
+				ChatColor.DARK_RED + "/mine list" + ChatColor.GRAY + " - A list of all the current mines and their names\n";
 	}
 }

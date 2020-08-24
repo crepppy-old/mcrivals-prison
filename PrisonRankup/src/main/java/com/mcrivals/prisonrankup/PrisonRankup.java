@@ -4,8 +4,9 @@ import com.mcrivals.prisoncore.PrisonCore;
 import com.mcrivals.prisonrankup.commands.MineCommand;
 import com.mcrivals.prisonrankup.commands.RankupCommand;
 import com.mcrivals.prisonrankup.commands.TutorialCommand;
+import com.mcrivals.prisonrankup.listeners.MineBreakListener;
+import com.mcrivals.prisonrankup.listeners.TutorialListeners;
 import com.sk89q.worldedit.MaxChangedBlocksException;
-import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.blocks.BlockType;
@@ -13,26 +14,27 @@ import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.patterns.BlockChance;
 import com.sk89q.worldedit.patterns.RandomFillPattern;
-import com.sk89q.worldedit.regions.CuboidRegion;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PrisonRankup extends JavaPlugin {
 	private PrisonCore prisonCore;
 	private LinkedList<Mine> mines;
+	private Set<Tutorial> tutorials;
 	private PlayerManager playerManager;
 	private WorldEditPlugin worldEditPlugin;
 	private Permission permissions;
 	private FileManager fileManager;
+
+	public Set<Tutorial> getTutorials() {
+		return tutorials;
+	}
 
 	public WorldEditPlugin getWorldEditPlugin() {
 		return worldEditPlugin;
@@ -41,6 +43,7 @@ public class PrisonRankup extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		saveResource("config.yml", false);
+		saveResource("tutorials.yml", false);
 		if (!Bukkit.getPluginManager().isPluginEnabled("MCRivalsPrisonCore")) {
 			getLogger().severe("-- MCRivalsPrisonCore is not loaded! --");
 			Bukkit.getPluginManager().disablePlugin(this);
@@ -57,14 +60,22 @@ public class PrisonRankup extends JavaPlugin {
 		RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
 		permissions = rsp.getProvider();
 
+		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+			new RankupPlaceholderExpansion(this).register();
+		}
+
 		mines = new LinkedList<>();
+		tutorials = new HashSet<>();
 		this.prisonCore = (PrisonCore) Bukkit.getPluginManager().getPlugin("MCRivalsPrisonCore");
 		getCommand("rankup").setExecutor(new RankupCommand(this));
 		getCommand("thelp").setExecutor(new TutorialCommand(this));
 		getCommand("mine").setExecutor(new MineCommand(this));
+		Bukkit.getPluginManager().registerEvents(new MineBreakListener(this), this);
+		Bukkit.getPluginManager().registerEvents(new TutorialListeners(this), this);
 
 		fileManager = new FileManager(this);
 		fileManager.loadMines();
+		fileManager.loadTutorials();
 		playerManager = new PlayerManager(this);
 		playerManager.loadPlayers();
 
@@ -81,7 +92,7 @@ public class PrisonRankup extends JavaPlugin {
 						.collect(Collectors.toList()));
 				try {
 					WorldEdit.getInstance().getEditSessionFactory().getEditSession(new BukkitWorld(m.getMinimumPoint().getWorld()), -1).setBlocks(
-							new CuboidRegion(toVector(m.getMinimumPoint()), toVector(m.getMaximumPoint())), pattern);
+							m.getMineRegion(), pattern);
 				} catch (MaxChangedBlocksException e) {
 					e.printStackTrace();
 				}
@@ -93,10 +104,6 @@ public class PrisonRankup extends JavaPlugin {
 			}, index * 20 * 20L, getConfig().getInt("mine-reset") * 20L);
 			index++;
 		}
-	}
-
-	private Vector toVector(Location loc) {
-		return Vector.toBlockPoint(loc.getX(), loc.getY(), loc.getZ());
 	}
 
 	public PrisonCore getPrisonCore() {

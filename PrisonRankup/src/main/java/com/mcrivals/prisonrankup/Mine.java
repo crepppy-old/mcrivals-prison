@@ -1,5 +1,7 @@
 package com.mcrivals.prisonrankup;
 
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.regions.CuboidRegion;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
@@ -54,6 +56,15 @@ public class Mine {
 		return commands;
 	}
 
+	public CuboidRegion getMineRegion() {
+		return new CuboidRegion(Vector.toBlockPoint(minimumPoint.getX(), minimumPoint.getY(), minimumPoint.getZ()),
+				Vector.toBlockPoint(maximumPoint.getX(), maximumPoint.getY(), maximumPoint.getZ()));
+	}
+
+	public boolean isInMine(Location location) {
+		return getMineRegion().contains(Vector.toBlockPoint(location.getX(), location.getY(), location.getZ()));
+	}
+
 	public Map<BlockType, Integer> getBlockPercentages() {
 		return blockPercentages;
 	}
@@ -61,6 +72,7 @@ public class Mine {
 	public void addBlock(BlockType material, Integer percentage) {
 		blockPercentages.put(material, percentage);
 	}
+
 	public void addCommand(String command) {
 		commands.add(command);
 	}

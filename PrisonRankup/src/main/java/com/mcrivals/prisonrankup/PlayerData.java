@@ -1,17 +1,31 @@
 package com.mcrivals.prisonrankup;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 public class PlayerData {
-	private UUID playerUUID;
+	private final UUID playerUUID;
+	private transient final HashMap<Material, Float> multiplierDrops;
 	private boolean tutorialsEnabled;
 	private boolean autoRankup;
 	private int prestige;
 	private float resourceMultiplier;
 	private Mine mine;
+
+	public PlayerData(UUID playerUUID, boolean tutorialsEnabled, boolean autoRankup, Mine mine, int prestige, int resourceMultiplier) {
+		this.playerUUID = playerUUID;
+		this.tutorialsEnabled = tutorialsEnabled;
+		this.autoRankup = autoRankup;
+		this.mine = mine;
+		this.prestige = prestige;
+		this.resourceMultiplier = resourceMultiplier;
+		this.multiplierDrops = new HashMap<>();
+		//todo save on change
+	}
 
 	public boolean isAutoRankup() {
 		return autoRankup;
@@ -26,42 +40,56 @@ public class PlayerData {
 		return Bukkit.getPlayer(playerUUID);
 	}
 
-	public void setPrestige(int prestige) {
-		this.prestige = prestige;
-	}
-
 	public int getPrestige() {
 		return prestige;
 	}
 
-	public PlayerData(UUID playerUUID, boolean tutorialsEnabled, boolean autoRankup, Mine mine, int prestige, int resourceMultiplier) {
-		this.playerUUID = playerUUID;
-		this.tutorialsEnabled = tutorialsEnabled;
-		this.autoRankup = autoRankup;
-		this.mine = mine;
+	public void setPrestige(int prestige) {
 		this.prestige = prestige;
+	}
+
+	public float getResourceMultiplier() {
+		return resourceMultiplier;
+	}
+
+	public void setResourceMultiplier(float resourceMultiplier) {
 		this.resourceMultiplier = resourceMultiplier;
-		//todo save on change
+	}
+
+	/**
+	 * Gets the amount of drops that should be given to the player once the resource
+	 * multiplier has been applied
+	 *
+	 * @param material   The material to give the player (this is needed as the remainder of previous drops
+	 *                   is stored)
+	 * @param dropAmount The amount that should be multiplied by the resource multiplier
+	 * @return The number of drops that should be given to the player
+	 * (this could be the same as the original drop amount as the remainder is stored)
+	 */
+	public int getDrops(Material material, int dropAmount) {
+		float extra = multiplierDrops.getOrDefault(material, 0f) + dropAmount * resourceMultiplier;
+		multiplierDrops.put(material, extra % 1);
+		return (int) extra;
 	}
 
 	public UUID getPlayerUUID() {
 		return playerUUID;
 	}
 
-	void setTutorialsEnabled(boolean tutorialsEnabled) {
-		this.tutorialsEnabled = tutorialsEnabled;
-	}
-
-	void setMine(Mine mine) {
-		this.mine = mine;
-	}
-
 	public boolean isTutorialsEnabled() {
 		return tutorialsEnabled;
 	}
 
+	void setTutorialsEnabled(boolean tutorialsEnabled) {
+		this.tutorialsEnabled = tutorialsEnabled;
+	}
+
 	public Mine getMine() {
 		return mine;
+	}
+
+	void setMine(Mine mine) {
+		this.mine = mine;
 	}
 
 }

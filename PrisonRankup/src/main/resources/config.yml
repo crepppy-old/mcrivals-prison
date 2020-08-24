@@ -4,3 +4,6 @@ mine-reset: 300
 ## The permission group prefix that's set for permissions
 ## e.g when a player ranks up to B mine, the group MineB will be given if it exists
 group-prefix: Mine
+
+## The amount to increase a players resource multiplier every time they rank up
+resource-multiplier-increment: 0.04

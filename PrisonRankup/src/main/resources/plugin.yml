@@ -1,4 +1,4 @@
-main: com.mcrivals.prisoncore.PrisonRankup
+main: com.mcrivals.prisonrankup.PrisonRankup
 name: MCRivalsPrisonRankup
 authors: [crepppy]
 depends: [MCRivalsPrisonCore]
@@ -8,3 +8,14 @@ commands:
   rankup:
     description: Ranks the player up to the next mine
     usage: /<command>
+  mine:
+    description: The admin mine command to configure the mines
+    usage: /<command>
+  thelp:
+    description: Shows the given tutorial
+    usage: /<command>
+
+permissions:
+  prisonrankup.mineadmin:
+    description: Gives access to /mine command
+    default: op

@@ -20,7 +20,7 @@ public class ReflectionUtils {
 	}
 
 	public static Class<?> getNMSClass(String name) {
-		if(reflectionMap.containsKey(name)) return reflectionMap.get(name);
+		if (reflectionMap.containsKey(name)) return reflectionMap.get(name);
 		try {
 			Class<?> nmsClass = Class.forName("net.minecraft.server." + version + "." + name);
 			reflectionMap.put(name, nmsClass);

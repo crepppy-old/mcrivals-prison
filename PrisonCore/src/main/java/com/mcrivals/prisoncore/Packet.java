@@ -3,18 +3,18 @@ package com.mcrivals.prisoncore;
 import org.bukkit.entity.Player;
 
 public class Packet {
-	private Object packet;
-	private Player player;
-	private boolean write;
-
-	public boolean isWrite() {
-		return write;
-	}
+	private final Object packet;
+	private final Player player;
+	private final boolean write;
 
 	public Packet(Object packet, Player player, boolean write) {
 		this.packet = packet;
 		this.player = player;
 		this.write = write;
+	}
+
+	public boolean isWrite() {
+		return write;
 	}
 
 	public Object getPacket() {

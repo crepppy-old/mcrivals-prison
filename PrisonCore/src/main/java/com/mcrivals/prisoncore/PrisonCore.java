@@ -9,14 +9,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 public class PrisonCore extends JavaPlugin {
 	private String prefix;
 	private Connection connection;
-	private Set<Function<Packet, Boolean>> packetListeners;
+	private List<Function<Packet, Boolean>> packetListeners;
 
 	public Connection getConnection() {
 		return connection;
@@ -26,7 +26,7 @@ public class PrisonCore extends JavaPlugin {
 	public void onEnable() {
 		saveResource("config.yml", false);
 		this.prefix = ChatColor.translateAlternateColorCodes('&', this.getConfig().getString("prefix"));
-		this.packetListeners = new HashSet<>();
+		this.packetListeners = new ArrayList<>();
 		try {
 			ConfigurationSection dbConfig = getConfig().getConfigurationSection("database");
 			connection = DriverManager.getConnection(String.format("jdbc:mysql://%s:%s", dbConfig.getString("host"), dbConfig.getString("port")),
@@ -35,7 +35,7 @@ public class PrisonCore extends JavaPlugin {
 			getLogger().severe("Incorrect database credentials");
 		}
 
-		Bukkit.getPluginManager().registerEvents(new PacketListener(this),this);
+		Bukkit.getPluginManager().registerEvents(new PacketListener(this), this);
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class PrisonCore extends JavaPlugin {
 		packetListeners.add(function);
 	}
 
-	public Set<Function<Packet, Boolean>> getPacketListeners() {
+	public List<Function<Packet, Boolean>> getPacketListeners() {
 		return packetListeners;
 	}
 

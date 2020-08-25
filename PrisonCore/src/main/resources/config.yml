@@ -1,2 +1,8 @@
 ## The prefix before all messages sent to the player by any MCRival plugin
 prefix: '&4&lMCRivals &0» &7'
+
+database:
+  host: 127.0.0.1
+  port: 3306
+  username: sqlusername
+  password: password123

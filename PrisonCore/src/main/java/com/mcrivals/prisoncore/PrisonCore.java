@@ -38,6 +38,15 @@ public class PrisonCore extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new PacketListener(this),this);
 	}
 
+	@Override
+	public void onDisable() {
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void addListener(Function<Packet, Boolean> function) {
 		packetListeners.add(function);
 	}

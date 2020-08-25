@@ -12,7 +12,7 @@ public class RivalCurrency extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		saveDefaultConfig();
+		saveResource("config.yml", false);
 
 		dataManager = new PlayerDataManager(this);
 		getServer().getPluginManager().registerEvents(dataManager, this);

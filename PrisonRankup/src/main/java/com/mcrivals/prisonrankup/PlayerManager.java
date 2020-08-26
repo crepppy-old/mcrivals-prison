@@ -1,19 +1,16 @@
 package com.mcrivals.prisonrankup;
 
 import com.google.gson.JsonObject;
+import com.mcrivals.currency.player.PlayerDataManager;
 import com.mcrivals.prisoncore.Packet;
 import com.mcrivals.prisoncore.PrisonCore;
 import com.mcrivals.prisoncore.ReflectionUtils;
 import com.mcrivals.prisonrankup.events.RankupEvent;
-import de.tr7zw.nbtinjector.NBTInjector;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.*;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Zombie;
-import org.bukkit.util.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,10 +20,7 @@ import java.nio.file.Path;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -106,11 +100,13 @@ public class PlayerManager {
 		int index = plugin.getMines().indexOf(player.getMine());
 		if (player.getMine().getName().equalsIgnoreCase("Z") || plugin.getMines().size() == index + 1) return false;
 		Mine toMine = plugin.getMines().get(index + 1);
+		com.mcrivals.currency.player.PlayerData currencyData = PlayerDataManager.getByUuid(player.getPlayerUUID());
+		if(currencyData.getGold() < toMine.getCost()) return false;
 		// Check no other plugins want to cancel this event first
 		RankupEvent event = new RankupEvent(player, toMine, 0);
 		Bukkit.getPluginManager().callEvent(event);
 		if (event.isCancelled()) return false;
-
+		currencyData.setGold((long) (currencyData.getGold() - toMine.getCost()));
 		setMine(player, plugin.getMines().get(index + 1));
 		setResourceMultiplier(player, (float) (player.getResourceMultiplier() + plugin.getConfig().getDouble("resource-multiplier-increment")));
 		Arrays.stream(plugin.getPermissions().getGroups())
@@ -118,7 +114,7 @@ public class PlayerManager {
 				.findAny()
 				.ifPresent(group -> plugin.getPermissions().playerAddGroup(player.getPlayer(), group));
 		Utils.runCommandList(toMine.getCommands(), player);
-		//todo take money and highlight scoreboard
+		// todo highlight scoreboard
 		return true;
 	}
 

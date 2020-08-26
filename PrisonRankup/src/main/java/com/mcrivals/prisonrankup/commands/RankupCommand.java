@@ -1,6 +1,8 @@
 package com.mcrivals.prisonrankup.commands;
 
+import com.mcrivals.currency.player.PlayerDataManager;
 import com.mcrivals.prisoncore.Messages;
+import com.mcrivals.prisonrankup.Mine;
 import com.mcrivals.prisonrankup.PlayerData;
 import com.mcrivals.prisonrankup.PrisonRankup;
 import org.bukkit.ChatColor;
@@ -63,7 +65,9 @@ public class RankupCommand implements CommandExecutor {
 		if (player.getMine().getName().equalsIgnoreCase("Z")) {
 			msg(ChatColor.RED + "You are already in Mine Z!", player.getPlayer());
 		} else {
-			msg(ChatColor.RED + "You don't have enough gold to rank up!", player.getPlayer()); //todo how much gold off
+			com.mcrivals.currency.player.PlayerData currencyData = PlayerDataManager.getByUuid(player.getPlayerUUID());
+			Mine nextMine = plugin.getMines().get(plugin.getMines().indexOf(player.getMine()));
+			msg(ChatColor.RED + "You need %d more gold to rankup!", player.getPlayer(), nextMine.getCost() - currencyData.getGold());
 		}
 	}
 }

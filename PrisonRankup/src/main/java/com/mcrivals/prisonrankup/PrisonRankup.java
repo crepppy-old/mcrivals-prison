@@ -1,5 +1,6 @@
 package com.mcrivals.prisonrankup;
 
+import com.mcrivals.currency.RivalCurrency;
 import com.mcrivals.prisoncore.PrisonCore;
 import com.mcrivals.prisonrankup.commands.*;
 import com.mcrivals.prisonrankup.listeners.MineBreakListener;
@@ -23,12 +24,17 @@ import java.util.stream.Collectors;
 
 public class PrisonRankup extends JavaPlugin {
 	private PrisonCore prisonCore;
-	private LinkedList<Mine> mines;
+	private RivalCurrency currency;
+	private List<Mine> mines;
 	private List<Tutorial> tutorials;
 	private PlayerManager playerManager;
 	private WorldEditPlugin worldEditPlugin;
 	private Permission permissions;
 	private FileManager fileManager;
+
+	public RivalCurrency getCurrency() {
+		return currency;
+	}
 
 	public List<Tutorial> getTutorials() {
 		return tutorials;
@@ -64,6 +70,7 @@ public class PrisonRankup extends JavaPlugin {
 
 		mines = new LinkedList<>();
 		tutorials = new ArrayList<>();
+		this.currency = (RivalCurrency) Bukkit.getPluginManager().getPlugin("RivalCurrency");
 		this.prisonCore = (PrisonCore) Bukkit.getPluginManager().getPlugin("MCRivalsPrisonCore");
 
 		fileManager = new FileManager(this);
@@ -99,7 +106,7 @@ public class PrisonRankup extends JavaPlugin {
 					e.printStackTrace();
 				}
 				for (PlayerData data : playerManager.getPlayers()) {
-					if(data.getPlayer() == null || !data.getPlayer().isOnline()) continue;
+					if (data.getPlayer() == null || !data.getPlayer().isOnline()) continue;
 					if (data.getMine().equals(m)) {
 						prisonCore.sendPrefixedMessage(ChatColor.GOLD + "Mine " + m.getName() + " has just reset!", data.getPlayer());
 					}
@@ -131,7 +138,7 @@ public class PrisonRankup extends JavaPlugin {
 		fileManager.saveMines();
 	}
 
-	public LinkedList<Mine> getMines() {
+	public List<Mine> getMines() {
 		return mines;
 	}
 

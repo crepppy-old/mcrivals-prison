@@ -14,6 +14,12 @@ commands:
   thelp:
     description: Shows the given tutorial
     usage: /<command>
+  prestige:
+    description: Sends the player to an arena to fight their prestige boss
+    usage: /<command>
+  toggletutorials:
+    description: Toggles a players tutorial preferences
+    usage: /<command>
 
 permissions:
   prisonrankup.mineadmin:

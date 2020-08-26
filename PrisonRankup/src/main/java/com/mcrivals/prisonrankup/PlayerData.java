@@ -4,6 +4,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -13,27 +17,35 @@ public class PlayerData {
 	private boolean tutorialsEnabled;
 	private boolean autoRankup;
 	private int prestige;
+	private long prestigeCooldown;
 	private float resourceMultiplier;
 	private Mine mine;
 
-	public PlayerData(UUID playerUUID, boolean tutorialsEnabled, boolean autoRankup, Mine mine, int prestige, int resourceMultiplier) {
+	public PlayerData(UUID playerUUID, boolean tutorialsEnabled, boolean autoRankup, Mine mine, int prestige, int resourceMultiplier, int prestigeCooldown) {
 		this.playerUUID = playerUUID;
 		this.tutorialsEnabled = tutorialsEnabled;
 		this.autoRankup = autoRankup;
 		this.mine = mine;
 		this.prestige = prestige;
+		this.prestigeCooldown = prestigeCooldown;
 		this.resourceMultiplier = resourceMultiplier;
 		this.multiplierDrops = new HashMap<>();
-		//todo save on change
+	}
+
+	public long getPrestigeCooldown() {
+		return prestigeCooldown;
+	}
+
+	void setPrestigeCooldown(long prestigeCooldown) {
+		this.prestigeCooldown = prestigeCooldown;
 	}
 
 	public boolean isAutoRankup() {
 		return autoRankup;
 	}
 
-	public boolean setAutoRankup(boolean autoRankup) {
+	void setAutoRankup(boolean autoRankup) {
 		this.autoRankup = autoRankup;
-		return autoRankup;
 	}
 
 	public Player getPlayer() {
@@ -44,7 +56,7 @@ public class PlayerData {
 		return prestige;
 	}
 
-	public void setPrestige(int prestige) {
+	void setPrestige(int prestige) {
 		this.prestige = prestige;
 	}
 
@@ -52,7 +64,7 @@ public class PlayerData {
 		return resourceMultiplier;
 	}
 
-	public void setResourceMultiplier(float resourceMultiplier) {
+	void setResourceMultiplier(float resourceMultiplier) {
 		this.resourceMultiplier = resourceMultiplier;
 	}
 
@@ -91,5 +103,4 @@ public class PlayerData {
 	void setMine(Mine mine) {
 		this.mine = mine;
 	}
-
 }

@@ -33,7 +33,8 @@ public class RankupCommand implements CommandExecutor {
 		Function<PlayerData, Boolean> playerCanRankup = (p) -> false;
 		if (args.length > 1) {
 			if (args[0].equalsIgnoreCase("auto")) {
-				boolean enabled = playerData.setAutoRankup(!playerData.isAutoRankup());
+				plugin.getPlayerManager().setAutoRankup(playerData, !playerData.isAutoRankup());
+				boolean enabled = playerData.isAutoRankup();
 				msg("Auto rankup is now " + (enabled ? "enabled" : "disabled"), player);
 				return true;
 			} else {
@@ -61,7 +62,8 @@ public class RankupCommand implements CommandExecutor {
 	public void rankupReason(PlayerData player) {
 		if (player.getMine().getName().equalsIgnoreCase("Z")) {
 			msg(ChatColor.RED + "You are already in Mine Z!", player.getPlayer());
+		} else {
+			msg(ChatColor.RED + "You don't have enough gold to rank up!", player.getPlayer()); //todo how much gold off
 		}
-		msg(ChatColor.RED + "You don't have enough gold to rank up!", player.getPlayer()); //todo how much gold off
 	}
 }

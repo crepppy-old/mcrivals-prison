@@ -6,7 +6,6 @@ import com.mcrivals.prisonrankup.Mine;
 import com.mcrivals.prisonrankup.PrisonRankup;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.regions.Region;
 import org.bukkit.ChatColor;
@@ -20,10 +19,8 @@ import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 public class MineCommand implements CommandExecutor {
-	private static final Pattern rankupPattern = Pattern.compile("\"?([^\"]+)\"? \"?([^\"]+)\"?");
 	private final PrisonRankup plugin;
 	private final PrisonCore core;
 
@@ -94,7 +91,12 @@ public class MineCommand implements CommandExecutor {
 					}
 					WorldEditPlugin worldEdit = plugin.getWorldEditPlugin();
 					try {
-						Region selection = worldEdit.getSession(player).getSelection(new BukkitWorld(player.getWorld()));
+						com.sk89q.worldedit.world.World world = worldEdit.getSession(player).getSelectionWorld();
+						if (world == null) {
+							msg(ChatColor.RED + "Please select the region of the mine with WorldEdit", player);
+							return true;
+						}
+						Region selection = worldEdit.getSession(player).getSelection(world);
 						Mine m = new Mine(name, cost,
 								vectorToLocation(selection.getMinimumPoint(), player.getWorld()),
 								vectorToLocation(selection.getMaximumPoint(), player.getWorld()));

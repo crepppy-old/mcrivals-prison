@@ -1,0 +1,25 @@
+name: RivalCurrency
+description: Custom for MCRivals - Currencies
+author: Harley Swift (Swift#2020)
+main: com.mcrivals.currency.RivalCurrency
+version: FINAL
+
+
+commands:
+ credits:
+  description: Check your credits
+  usage: /credits
+ gold:
+  description: Check your gold
+  usage: /credits
+ platinum:
+  description: Check your platinum
+  aliases: [plat]
+  usage: /credits
+ energy:
+  description: Check your energy
+  usage: /credits
+ tokens:
+  description: Check your tokens
+  aliases: [token]
+  usage: /credits

@@ -10,7 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>PrisonCore</module>
-        <module>PrisonCurrencies</module>
+        <module>PrisonCurrency</module>
         <module>PrisonRankup</module>
     </modules>
 

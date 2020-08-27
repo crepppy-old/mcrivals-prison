@@ -1,0 +1,10 @@
+name: RivalGlobalQuests
+description: RivalGlobalQuests
+author: Harley Swift
+main: com.harley.mcrivals.RivalGlobalQuests
+version: FINAL
+
+commands:
+ globalquests:
+  description: Main GUI Command
+  usage: /globalquests

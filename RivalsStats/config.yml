@@ -1,0 +1,11 @@
+glass-colour: 4
+
+placement-item:
+ name: '&f&o{player} &6&l#{position}'
+ lore:
+  - ' '
+  - '&fPlayer: &6&n{player}'
+  - '&fAmount: &6&n{broken}'
+  - '&fPosition: &6&n#{position}'
+  - ' '
+  

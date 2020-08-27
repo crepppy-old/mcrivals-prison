@@ -33,12 +33,6 @@ public class CheckCommands implements CommandExecutor {
 		if (cmd.getName().equalsIgnoreCase("tokens")) {
 			p.sendMessage("§6You have §f§n" + data.getTokens() + "§6 tokens");
 		}
-		if (cmd.getName().equalsIgnoreCase("gauntlets")) {
-			p.sendMessage("§6You have §f§n" + data.getGauntlets() + "§6 gauntlets");
-		}
-		if (cmd.getName().equalsIgnoreCase("relics")) {
-			p.sendMessage("§6You have §f§n" + data.getRelics() + "§6 relics");
-		}
 		return true;
 	}
 

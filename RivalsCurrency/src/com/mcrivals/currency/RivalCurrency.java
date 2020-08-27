@@ -34,8 +34,6 @@ public class RivalCurrency extends JavaPlugin {
 			getConfig().set(path + ".platinum", players.getPlatinum());
 			getConfig().set(path + ".energy", players.getEnergy());
 			getConfig().set(path + ".tokens", players.getTokens());
-			getConfig().set(path + ".gauntlets", players.getGauntlets());
-			getConfig().set(path + ".relics", players.getRelics());
 		}
 		saveConfig();
 	}
@@ -52,8 +50,6 @@ public class RivalCurrency extends JavaPlugin {
 		getCommand("platinum").setExecutor(new CheckCommands());
 		getCommand("energy").setExecutor(new CheckCommands());
 		getCommand("tokens").setExecutor(new CheckCommands());
-		getCommand("gauntlet").setExecutor(new CheckCommands());
-		getCommand("relics").setExecutor(new CheckCommands());
 	}
 
 }

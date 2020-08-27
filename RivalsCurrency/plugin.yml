@@ -23,9 +23,3 @@ commands:
   description: Check your tokens
   aliases: [token]
   usage: /credits
- gauntlet:
-  description: Check your gauntlets
-  usage: /credits
- relics:
-  description: Check your relics
-  usage: /credits

@@ -43,15 +43,11 @@ public class PlayerDataManager implements Listener {
 				long platinum = cfg.getLong("players." + uuid.toString() + ".platinum");
 				long energy = cfg.getLong("players." + uuid.toString() + ".energy");
 				long tokens = cfg.getLong("players." + uuid.toString() + ".tokens");
-				long gauntlets = cfg.getLong("players." + uuid.toString() + ".gauntlet");
-				long relics = cfg.getLong("players." + uuid.toString() + ".relics");
 
 				data.setCredits(credits);
 				data.setEnergy(energy);
-				data.setGauntlets(gauntlets);
 				data.setGold(gold);
 				data.setPlatinum(platinum);
-				data.setRelics(relics);
 				data.setTokens(tokens);
 			}
 		}

@@ -1,0 +1,10 @@
+name: RivalsStats
+description: Custom for MCRivals - Currencies
+author: Harley & Creppy
+main: com.mcrivals.stats.RivalStats
+version: FINAL
+
+commands:
+ leaderboard:
+  description: Open leaderboard
+  usage: /leaderboard

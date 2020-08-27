@@ -10,8 +10,6 @@ public class PlayerData {
 	private long platinum;
 	private long energy;
 	private long tokens;
-	private long gauntlets;
-	private long relics;
 
 	public PlayerData(UUID uuid) {
 		this.uuid = uuid;
@@ -64,22 +62,6 @@ public class PlayerData {
 
 	public void setTokens(long tokens) {
 		this.tokens = tokens;
-	}
-
-	public long getGauntlets() {
-		return gauntlets;
-	}
-
-	public void setGauntlets(long gauntlets) {
-		this.gauntlets = gauntlets;
-	}
-
-	public long getRelics() {
-		return relics;
-	}
-
-	public void setRelics(long relics) {
-		this.relics = relics;
 	}
 
 }

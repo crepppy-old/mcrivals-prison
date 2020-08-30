@@ -1,0 +1,9 @@
+main: com.mcrivals.customenchants.CustomEnchants
+name: RivalEnchants
+version: "1.0"
+author: crepppy
+
+commands:
+  enchant:
+    description: Enchants the player's currently held item
+    usage: /<command>

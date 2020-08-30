@@ -12,6 +12,7 @@
         <module>PrisonCore</module>
         <module>PrisonCurrency</module>
         <module>PrisonRankup</module>
+        <module>PrisonEnchants</module>
     </modules>
 
     <repositories>

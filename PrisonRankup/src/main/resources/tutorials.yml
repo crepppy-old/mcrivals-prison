@@ -1,0 +1,13 @@
+tutorials:
+  gold:
+    ## A list of messages to send to the player
+    messages:
+      - '&6      Welcome to the gold mine!      '
+      - '&7Here you can mine gold which you can sell'
+    ## The location to teleport the player to (can be deleted if none)
+    ## Format: WORLD X Y Z
+    location: world 0 100 0
+    ## The placeholder to highlight in the scoreboard (can be deleted if none)
+    placeholder: gold
+    ## The time in seconds that the scoreboard is highlighted / chat is frozen
+    delay: 20

@@ -1,0 +1,33 @@
+## Number of seconds between mine resets
+mine-reset: 300
+
+## The permission group prefix that's set for permissions
+## e.g when a player ranks up to B mine, the group RankB will be given if it exists
+## This same prefix is also used for prestiges
+group-prefix: Rank
+
+## The amount to increase a players resource multiplier every time they rank up
+resource-multiplier-increment: 0.04
+
+## The name of the world which contains the prestige arena
+##  and the location the player should spawn in
+## This world will be duplicated when a player starts a prestige boss
+prestige-world: arena
+prestige-world-spawn: 0 64 0
+
+## The weight and commands to be run when a player mines a lucky block
+## If you want to give the player an item run the `give` command
+## Weight is the relative chance of something being run
+##   (i.e a command with a weight of 2 is twice as likely to be run as a command with a weight of 1)
+## Format: weight:command
+lucky-block-commands:
+  - 1:give %player% diamond
+
+## Commands to be run when a player prestiges to any prestige
+## Any commands that use %player% are assumed to be console commands
+prestige-commands:
+  - give %player% diamond
+
+prestige:
+  1:
+    - thelp skilltree
